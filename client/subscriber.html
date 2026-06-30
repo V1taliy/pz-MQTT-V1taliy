@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Одержувач (Subscriber)</title>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .message-box { background: #f4f4f9; padding: 10px; margin-top: 10px; border-radius: 5px; border-left: 5px solid #4CAF50;}
+    </style>
+</head>
+<body>
+    <h2>MQTT Subscriber (Отримані повідомлення)</h2>
+    <div id="messagesList">Очікування повідомлень...</div>
+
+    <script>
+        const client = mqtt.connect('ws://localhost:9001');
+
+        client.on('connect', function () {
+            console.log('Підключено до брокера!');
+            // Підписуємось на той самий топік
+            client.subscribe('viti/test/channel');
+            document.getElementById('messagesList').innerHTML = ''; // Очищаємо статус
+        });
+
+        // Коли приходить нове повідомлення
+        client.on('message', function (topic, message) {
+            const newMsg = document.createElement('div');
+            newMsg.className = 'message-box';
+            newMsg.textContent = `[${topic}]: ${message.toString()}`;
+            
+            // Додаємо нове повідомлення на сторінку
+            document.getElementById('messagesList').prepend(newMsg);
+        });
+    </script>
+</body>
+</html>

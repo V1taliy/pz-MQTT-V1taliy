@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Відправник (Publisher)</title>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        input { padding: 10px; width: 300px; font-size: 16px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>MQTT Publisher (Відправити повідомлення)</h2>
+    <input type="text" id="msgInput" placeholder="Введіть ваше повідомлення тут...">
+    <button onclick="sendMessage()">Відправити</button>
+
+    <script>
+        // Підключаємось до брокера через WebSocket (порт 9001)
+        const client = mqtt.connect('ws://localhost:9001');
+
+        client.on('connect', function () {
+            console.log('Успішно підключено до брокера!');
+        });
+
+        function sendMessage() {
+            const text = document.getElementById('msgInput').value;
+            if(text) {
+                // Відправляємо повідомлення в топік
+                client.publish('viti/test/channel', text);
+                document.getElementById('msgInput').value = ''; // очищаємо поле
+            }
+        }
+    </script>
+</body>
+</html>
